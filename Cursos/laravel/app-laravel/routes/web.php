@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\PageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,11 +13,17 @@ use Illuminate\Http\Request;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+/*
+Route::get('/', [PageController::class, 'home'])->name('home');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('blog', [PageController::class, 'blog'])->name('blog');
 
-Route::get('buscar', function (Request $request) {
-    return $request->all();
+Route::get('blog/{slug}', [PageController::class, 'post'])->name('post');
+*/
+Route::controller(PageController::class)->group(function(){
+    Route::get('/', 'home')->name('home');
+
+    Route::get('blog', 'blog')->name('blog');
+
+    Route::get('blog/{slug}', 'post')->name('post');
 });
