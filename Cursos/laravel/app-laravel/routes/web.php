@@ -3,23 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PageController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-/*
-Route::get('/', [PageController::class, 'home'])->name('home');
+use App\Http\Controllers\PostController;
 
-Route::get('blog', [PageController::class, 'blog'])->name('blog');
 
-Route::get('blog/{slug}', [PageController::class, 'post'])->name('post');
-*/
 Route::controller(PageController::class)->group(function(){
     Route::get('/', 'home')->name('home');
 
@@ -27,3 +13,11 @@ Route::controller(PageController::class)->group(function(){
 
     Route::get('blog/{post:slug}', 'post')->name('post');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::resource('posts', PostController::class)->except(['show'])->middleware(['auth']);
+
+require __DIR__.'/auth.php';
