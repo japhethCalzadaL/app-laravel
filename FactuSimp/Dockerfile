@@ -1,7 +1,7 @@
-# Usa la imagen oficial de PHP 8 como base
+# Install php 8
 FROM php:8-apache
 
-# Instala las extensiones y herramientas necesarias
+# Install php 8
 RUN apt-get update \
     && apt-get install -y \
         libzip-dev \
@@ -9,31 +9,25 @@ RUN apt-get update \
         git \
     && docker-php-ext-install pdo_mysql zip
 
-# Habilita el módulo de Apache mod_rewrite
+# Enable the Apache mod_rewrite module
 RUN a2enmod rewrite
 
-# Configura el servidor Apache
+# Configure the Apache server
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Instala Composer
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Establece el directorio de trabajo
+# Work directory
 WORKDIR /var/www/html
 
-# Copia los archivos de tu aplicación al contenedor
+# Copy files
 COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instala las dependencias de Composer
-# RUN composer install
-
-# Asigna permisos adecuados
-# RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Expone el puerto 80 para acceder a la aplicación web
+# Expose port 80 to access the web application
 EXPOSE 80
 
-# Comando para iniciar Apache y mantener el contenedor en ejecución
+# start apache
 CMD ["apache2-foreground"]
