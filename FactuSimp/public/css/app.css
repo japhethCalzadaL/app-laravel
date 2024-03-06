@@ -50,11 +50,14 @@ button:hover {
 }
 
 .error {
-    color: #e3342f;
     font-size: 80%;
-    margin-top: 0.25rem;
-    margin-bottom: 0.550rem;
+    color: #e3342f;
     background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 0.25rem;
+    border-color: #f8ddd7;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
 }

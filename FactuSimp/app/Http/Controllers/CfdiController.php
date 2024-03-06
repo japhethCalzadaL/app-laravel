@@ -15,6 +15,11 @@ class CfdiController extends Controller
         $this->xmlService = $xmlService;
     }
 
+    public function index()
+    {
+        return view('cfdi');
+    }
+
     public function create(Request $request)
     {
         $messages = [
@@ -32,7 +37,12 @@ class CfdiController extends Controller
         }
         $xmlService = $this->xmlService->xml($request);
 
-        $errors = new MessageBag(['error' => 'Error en el servicio']);
-        return redirect()->back()->withErrors($errors)->withInput();
+        if ($xmlService['error']) {
+            return redirect()->back()->withErrors(['error' => $xmlService['message']])->withInput();
+        }
+
+        return redirect()->route('cfdi.index')->with('success', 'CFDI creado exitosamente.');
+
+
     }
 }

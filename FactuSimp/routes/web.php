@@ -19,9 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/invoicer', function () {
-    return view('invoicer');
-});
+
+Route::get('/cfdi', [CfdiController::class, 'index'])->name('cfdi.index');
 
 Route::post('/create-cfdi', [CfdiController::class, 'create'])->name('cfdi.create');
 

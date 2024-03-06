@@ -11,6 +11,13 @@
             <form action="{{ route('cfdi.create') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <h2>Agrega el archivo XML a timbrar</h2>
+
+                @if(session('success'))
+                    <div class="success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 @if($errors->any())
                     <div class="error">
                         <ul>
