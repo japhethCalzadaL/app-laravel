@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
         <title>FactuSimp</title>
     </head>
     <body>
@@ -29,11 +31,15 @@
                 @endif
                 <div class="field">
                     <label for="archivo">Seleccionar Archivo:</label>
-                    <input type="file" name="file" id="file" accept=".pdf, .doc, .docx">
+                    <input type="file" name="file" id="file" accept=".xml">
                 </div>
 
                 <div class="field">
                     <button type="submit">Timbrar</button>
+                    <a href="{{ route ('cfdi.list') }}" class="btn btn-primary">Listado de CFDI envíado</a>
+                </div>
+                <div>
+
                 </div>
             </form>
         </div>

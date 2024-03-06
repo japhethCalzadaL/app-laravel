@@ -32,17 +32,17 @@ class XmlService
         $this->rfcData($xml, $cfdiData);
 
         if (!$validateDate) {
-            $this->setErrorAndStatus($cfdiData, 'El campo Fecha no cumple con el patrón requerido.');
+            $this->setErrorAndStatus($cfdiData, ' Error CFDI40101 El campo Fecha no cumple con el patrón requerido.');
             return false;
         }
 
         if (!$validateMethodPayment) {
-            $this->setErrorAndStatus($cfdiData, 'El campo FormaPago no contiene un valor del catálogo c_FormaPago.');
+            $this->setErrorAndStatus($cfdiData, 'Error CFDI40104 El campo FormaPago no contiene un valor del catálogo c_FormaPago.');
             return false;
         }
 
         if (!$validateUseCfdi) {
-            $this->setErrorAndStatus($cfdiData, 'La clave del campo UsoCFDI debe corresponder con el tipo de persona (física o moral)');
+            $this->setErrorAndStatus($cfdiData, 'Error CFDI40161 La clave del campo UsoCFDI debe corresponder con el tipo de persona (física o moral)');
             return false;
         }
 

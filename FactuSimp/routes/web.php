@@ -15,12 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
 Route::get('/cfdi', [CfdiController::class, 'index'])->name('cfdi.index');
 
 Route::post('/create-cfdi', [CfdiController::class, 'create'])->name('cfdi.create');
+
+Route::get('/list-cfdi', [CfdiController::class, 'list'])->name('cfdi.list');
 

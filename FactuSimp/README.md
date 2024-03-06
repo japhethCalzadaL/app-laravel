@@ -1,66 +1,42 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FactuSimp
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Factu Simp es un desarrollo de prueba para mostrar errores posibles en un cfdi.
 
-## About Laravel
+## Requisitos del Sistema
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+El sistema corre con docker el cual incluye lo siguiente
+- PHP 8
+- Apache
+- Composer
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sera necesario para ejecutarlo contar con docker, para la documentación completa puede consultar
+- [Docker Documentación completa](https://docs.docker.com/engine/install/)
+## Instalación
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sé envia en un zip el archivo factuSimp.zip el cual contiene todo el código necesario para este sistema de pruebas,
+facor de descomprimir el archivo.
 
-## Learning Laravel
+Dentro del proyecto esta el archivo DockerFile que contiene todo lo necesario para poder utilizar el sistema,
+para esto dentrro del proyecto hay que ejecutar el siguiente comando para crear la imagen factu_simp
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```docker build -t factu_simp .```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Despues de crear la imagen se debe crear el contenedor el cual tiene el nombre de factu_simp_japheth es importante que 
+en el volumen agregue la ruta donde coloco el proyecto, para crear el contenedor debe ejecutar lo siguiente
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```docker run -p 8080:80 --name factu_simp_japheth -v ${pwd}:/var/www/html factu_simp```
 
-## Laravel Sponsors
+Ejemplo
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```docker run -p 8080:80 --name factu_simp_japheth -v /home/japheth/FactuSimp:/var/www/html factu_simp```
 
-### Premium Partners
+Se creara el contenedor y podrá y para poder probar el sistema la ruta se encuentra en http://localhost:8080/list-cfdi donde encontrará un listado de los xml enviados a facturar, en la parte superior derecha hay un boton para poder crear el CDFI
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+En caso de querer parar el contenedor podra hacerlo ejecutando lo siguiente 
 
-## Contributing
+```docker stop factu_simp_japheth```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Y para volver a ejecutarlo
+```docker start factu_simp_japheth```
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+La información guardada podra verla en la base de datos que se proporciono, no es necesario realizar migraciones, ya estan ejecutadas en la base de datos.

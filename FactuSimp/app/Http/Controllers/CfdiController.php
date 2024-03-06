@@ -21,6 +21,14 @@ class CfdiController extends Controller
         return view('cfdi');
     }
 
+    public function list()
+    {
+        return view('list', [
+            'cfdis'     => Cfdi::latest()->paginate(10)
+        ]);
+    }
+
+
     public function create(Request $request)
     {
         $cfdiData = [];
