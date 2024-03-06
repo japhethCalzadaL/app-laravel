@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\XmlService;
 use Illuminate\Http\Request;
 
 class CfdiController extends Controller
 {
+
+    public function __construct(protected XmlService $xmlService)
+    {
+        $this->xmlService = $xmlService;
+    }
+
     public function create(Request $request)
     {
         $messages = [
@@ -18,5 +25,6 @@ class CfdiController extends Controller
             'archivo' => 'required|mimes:xml|max:1024',
         ], $messages);
 
+        $this->xmlService->xml($request);
     }
 }
