@@ -35,13 +35,13 @@ class CfdiController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $xmlService = $this->xmlService->xml($request);
+        $xmlService = $this->xmlService->validateXML($request);
 
         if ($xmlService['error']) {
             return redirect()->back()->withErrors(['error' => $xmlService['message']])->withInput();
         }
 
-        return redirect()->route('cfdi.index')->with('success', 'CFDI creado exitosamente.');
+        return redirect()->route('cfdi.index')->with('success', $xmlService['message']);
 
 
     }

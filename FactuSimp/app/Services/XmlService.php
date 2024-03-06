@@ -13,7 +13,7 @@ class XmlService
      * @param Request $request
      * @return array
      */
-    public function xml(Request $request)
+    public function validateXML(Request $request)
     {
         $response = [];
         $file = $request->file('file');
@@ -23,6 +23,7 @@ class XmlService
 
         $validateDate = $this->validateDate($xml);
         $validateMethodPayment = $this->validateMethodPayment($xml);
+        $validateUseCfdi = $this->validateUseCfdi($xml);
 
         if (!$validateDate) {
             $response["error"] = true;
@@ -34,6 +35,14 @@ class XmlService
         if (!$validateMethodPayment) {
             $response["error"] = true;
             $response["message"] = 'El campo FormaPago no contiene un valor del catálogo c_FormaPago.';
+
+            return $response;
+        }
+
+        if (!$validateUseCfdi) {
+            $response["error"] = true;
+            $response["message"] = 'La clave del campo UsoCFDI debe corresponder
+            con el tipo de persona (física o moral)';
 
             return $response;
         }
@@ -97,7 +106,7 @@ class XmlService
             'D08', 'D09', 'D10', 'P01'
         ];
 
-        $useCfdi = $xml->xpath('//cfdi:Comprobante/@UsoCFDI');
+        $useCfdi = $xml->xpath('//cfdi:Receptor/@UsoCFDI');
         $useCfdi = count($useCfdi) > 0 ? (string)$useCfdi[0] : null;
 
         if ($useCfdi !== null && in_array($useCfdi, $allowedUseCfdi)) {
