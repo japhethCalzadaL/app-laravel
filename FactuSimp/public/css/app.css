@@ -20,7 +20,7 @@ form {
     flex-direction: column;
 }
 
-.campo {
+.field {
     margin-bottom: 20px;
 }
 
@@ -53,9 +53,8 @@ button:hover {
     color: #e3342f;
     font-size: 80%;
     margin-top: 0.25rem;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.550rem;
     background-color: #f8d7da;
-    padding: 0.5rem;
     border: 1px solid #f5c6cb;
     border-radius: 0.25rem;
 }

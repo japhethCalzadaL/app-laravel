@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\XmlService;
 use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Validator;
 
 class CfdiController extends Controller
 {
@@ -21,10 +23,16 @@ class CfdiController extends Controller
             'max'      => 'El tamaño máximo del archivo es :max kilobytes.',
         ];
 
-        $request->validate([
-            'archivo' => 'required|mimes:xml|max:1024',
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xml|max:1024',
         ], $messages);
 
-        $this->xmlService->xml($request);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $xmlService = $this->xmlService->xml($request);
+
+        $errors = new MessageBag(['error' => 'Error en el servicio']);
+        return redirect()->back()->withErrors($errors)->withInput();
     }
 }

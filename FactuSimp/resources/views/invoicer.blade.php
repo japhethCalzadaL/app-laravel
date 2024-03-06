@@ -11,15 +11,21 @@
             <form action="{{ route('cfdi.create') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <h2>Agrega el archivo XML a timbrar</h2>
-                <div class="campo">
+                @if($errors->any())
+                    <div class="error">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="field">
                     <label for="archivo">Seleccionar Archivo:</label>
-                    <input type="file" name="archivo" id="archivo" accept=".pdf, .doc, .docx">
+                    <input type="file" name="file" id="file" accept=".pdf, .doc, .docx">
                 </div>
-                @error('archivo')
-                    <span class="error">{{ $message }}</span>
-                @enderror
 
-                <div class="campo">
+                <div class="field">
                     <button type="submit">Timbrar</button>
                 </div>
             </form>
