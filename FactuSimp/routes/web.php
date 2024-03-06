@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Cfdi;
+use App\Http\Controllers\CfdiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +20,8 @@ Route::get('/', function () {
 });
 
 Route::get('/invoicer', function () {
-    return view('welcome');
+    return view('invoicer');
 });
+
+Route::post('/create-cfdi', [CfdiController::class, 'create'])->name('cfdi.create');
+
