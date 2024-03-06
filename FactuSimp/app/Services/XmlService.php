@@ -13,17 +13,18 @@ class XmlService
      *
      * @param Request $request
      * @param array $cfdi
-     * @return array
+     * @return bool
      */
     public function validateXML(Request $request, &$cfdiData)
     {
         $response = [];
-
+        //Get information from xml
         $file = $request->file('file');
         $xmlContent = file_get_contents($file->getRealPath());
         $xml = new SimpleXMLElement($xmlContent);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
 
+        //cfdi validation logic
         $validateDate = $this->validateDate($xml, $cfdiData);
         $validateMethodPayment = $this->validateMethodPayment($xml);
         $validateUseCfdi = $this->validateUseCfdi($xml);
@@ -31,38 +32,22 @@ class XmlService
         $this->rfcData($xml, $cfdiData);
 
         if (!$validateDate) {
-            $response["error"] = true;
-            $response["message"] = 'El campo Fecha no cumple con el patrón requerido.';
-            $cfdiData["error"] = $response["message"];
-            $cfdiData["status"] = false;
-
-            return $response;
+            $this->setErrorAndStatus($cfdiData, 'El campo Fecha no cumple con el patrón requerido.');
+            return false;
         }
 
         if (!$validateMethodPayment) {
-            $response["error"] = true;
-            $response["message"] = 'El campo FormaPago no contiene un valor del catálogo c_FormaPago.';
-            $cfdiData["error"] = $response["message"];
-            $cfdiData["status"] = false;
-
-            return $response;
+            $this->setErrorAndStatus($cfdiData, 'El campo FormaPago no contiene un valor del catálogo c_FormaPago.');
+            return false;
         }
 
         if (!$validateUseCfdi) {
-            $response["error"] = true;
-            $response["message"] = 'La clave del campo UsoCFDI debe corresponder
-            con el tipo de persona (física o moral)';
-
-            $cfdiData["error"] = $response["message"];
-            $cfdiData["status"] = false;
-
-            return $response;
+            $this->setErrorAndStatus($cfdiData, 'La clave del campo UsoCFDI debe corresponder con el tipo de persona (física o moral)');
+            return false;
         }
 
-        $response["error"] = false;
-        $response["message"] = 'Se ha timbrado exitosamente.';
 
-        return $response;
+        return true;
     }
 
     /**
@@ -150,6 +135,18 @@ class XmlService
 
     }
 
+    /**
+     * setErrorAndStatus function
+     *
+     * @param array $cfdiData
+     * @param string $errorMessage
+     * @return void
+     */
+    private function setErrorAndStatus(array &$cfdiData, string $errorMessage): void
+    {
+        $cfdiData["error"] = $errorMessage;
+        $cfdiData["status"] = false;
+    }
 }
 
 

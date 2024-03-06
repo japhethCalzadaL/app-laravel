@@ -43,11 +43,11 @@ class CfdiController extends Controller
         $xmlService = $this->xmlService->validateXML($request, $cfdiData);
         Cfdi::create($cfdiData);
 
-        if ($xmlService['error']) {
-            return redirect()->back()->withErrors(['error' => $xmlService['message']])->withInput();
+        if (!$xmlService) {
+            return redirect()->back()->withErrors(['error' => $cfdiData["error"]])->withInput();
         }
 
-        return redirect()->route('cfdi.index')->with('success', $xmlService['message']);
+        return redirect()->route('cfdi.index')->with('success','Cfdi timbrado exitosamente');
 
 
     }
