@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cfdi;
 use App\Services\XmlService;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -22,6 +23,9 @@ class CfdiController extends Controller
 
     public function create(Request $request)
     {
+        $cfdiData = [];
+        $cfdiData["status"] = true;
+
         $messages = [
             'required' => 'Es necesario el archivo xml para poder timbrar',
             'mimes'    => 'El archivo debe ser de tipo :values.',
@@ -35,7 +39,9 @@ class CfdiController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $xmlService = $this->xmlService->validateXML($request);
+
+        $xmlService = $this->xmlService->validateXML($request, $cfdiData);
+        Cfdi::create($cfdiData);
 
         if ($xmlService['error']) {
             return redirect()->back()->withErrors(['error' => $xmlService['message']])->withInput();

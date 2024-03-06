@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Cfdi;
 use Illuminate\Http\Request;
 use SimpleXMLElement;
 use Illuminate\Support\Facades\Validator;
@@ -11,23 +12,29 @@ class XmlService
      * function function
      *
      * @param Request $request
+     * @param array $cfdi
      * @return array
      */
-    public function validateXML(Request $request)
+    public function validateXML(Request $request, &$cfdiData)
     {
         $response = [];
+
         $file = $request->file('file');
         $xmlContent = file_get_contents($file->getRealPath());
         $xml = new SimpleXMLElement($xmlContent);
         $xml->registerXPathNamespace('cfdi', 'http://www.sat.gob.mx/cfd/4');
 
-        $validateDate = $this->validateDate($xml);
+        $validateDate = $this->validateDate($xml, $cfdiData);
         $validateMethodPayment = $this->validateMethodPayment($xml);
         $validateUseCfdi = $this->validateUseCfdi($xml);
 
+        $this->rfcData($xml, $cfdiData);
+
         if (!$validateDate) {
             $response["error"] = true;
-            $response["message"] = 'El campo Fecha no cumple con el patrón requerido..';
+            $response["message"] = 'El campo Fecha no cumple con el patrón requerido.';
+            $cfdiData["error"] = $response["message"];
+            $cfdiData["status"] = false;
 
             return $response;
         }
@@ -35,6 +42,8 @@ class XmlService
         if (!$validateMethodPayment) {
             $response["error"] = true;
             $response["message"] = 'El campo FormaPago no contiene un valor del catálogo c_FormaPago.';
+            $cfdiData["error"] = $response["message"];
+            $cfdiData["status"] = false;
 
             return $response;
         }
@@ -43,6 +52,9 @@ class XmlService
             $response["error"] = true;
             $response["message"] = 'La clave del campo UsoCFDI debe corresponder
             con el tipo de persona (física o moral)';
+
+            $cfdiData["error"] = $response["message"];
+            $cfdiData["status"] = false;
 
             return $response;
         }
@@ -57,9 +69,10 @@ class XmlService
      * validateDate function
      *
      * @param SimpleXMLElement $xml
+     * @param array $cfdiData
      * @return boolean
      */
-    public function validateDate(SimpleXMLElement $xml)
+    public function validateDate(SimpleXMLElement $xml, array &$cfdiData)
     {
         $date = $xml->xpath('//cfdi:Comprobante/@Fecha');
         $date = count($date) > 0 ? (string)$date[0] : null;
@@ -116,6 +129,27 @@ class XmlService
 
         return false;
     }
+
+    /**
+     * validateDate function
+     *
+     * @param SimpleXMLElement $xml
+     * @param array $cfdiData
+     * @return void
+     */
+    public function rfcData(SimpleXMLElement $xml, array &$cfdiData)
+    {
+        $rfcTransmitter = $xml->xpath('//cfdi:Emisor/@Rfc');
+        $rfcTransmitter = count($rfcTransmitter) > 0 ? (string)$rfcTransmitter[0] : null;
+
+        $rfcReceiver = $xml->xpath('//cfdi:Receptor/@Rfc');
+        $rfcReceiver = count($rfcReceiver) > 0 ? (string)$rfcReceiver[0] : null;
+
+        $cfdiData["rfc_transmitter"] = $rfcTransmitter;
+        $cfdiData["rfc_receiver"] = $rfcReceiver;
+
+    }
+
 }
 
 

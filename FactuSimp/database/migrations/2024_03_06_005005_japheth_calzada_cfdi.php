@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('rfc_transmitter');
             $table->string('rfc_receiver');
-            $table->date('date_stamp');
-            $table->string('error');
+            $table->string('error')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });
@@ -31,5 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('japheth_calzada_cfdi');
+
     }
 };

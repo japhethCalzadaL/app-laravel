@@ -24,7 +24,6 @@ class Cfdi extends Model
         'id',
         'rfc_transmitter',
         'rfc_receiver',
-        'date_stamp',
         'error',
         'status'
     ];
